@@ -29,7 +29,7 @@
             <td>${onestu.sflag}</td>
             <td>
                 <a href="updateStu.jsp?sid=${onestu.sid}">修改</a>
-                <a href="delStu?sid=${onestu.sid}">删除</a>
+                <a href="${pageContext.request.contextPath}/stu/delete?sid=${onestu.sid}" onclick="return confirm('确定要删除这条记录吗')">删除</a>
             </td>
         </tr>
     </c:forEach>

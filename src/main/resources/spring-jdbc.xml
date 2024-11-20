@@ -3,12 +3,18 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context
        https://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/mvc
-       https://www.springframework.org/schema/mvc/spring-mvc.xsd">
+       https://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/tx
+       https://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/aop
+       https://www.springframework.org/schema/aop/spring-aop.xsd">
     <!--第1件事 配置整个项目的全局配置信息-->
     <!--第1.1件事 配置数据源信息，取代mybatis-config.xml中的environment标签-->
     <!--先引入db.properties文件，需要用到context这个前缀，所以需要先添加到对应的命名空间-->
@@ -32,4 +38,28 @@
     <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
         <constructor-arg index="0" ref="sqlSessionFactory"/>
     </bean>
+    <!--第3件事 配置声明式事务处理-->
+    <!--3.1 配置事务管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="myDataSource"/>
+    </bean>
+    <!--3.2 配置事务管理器的传播特性-->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="*" propagation="REQUIRED"/>
+        </tx:attributes>
+    </tx:advice>
+    <!--3.3 将配置好的事务处理器横切进系统当中-->
+    <aop:config>
+        <aop:pointcut id="txPointCut" expression="execution(* com.azhuquq..*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointCut"/>
+    </aop:config>
+
+    <!--    PROPAGATION_REQUIRED：如果不存在外层事务，就主动创建事务；否则使用外层事务-->
+    <!--    PROPAGATION_SUPPORTS：如果不存在外层事务，就不开启事务；否则使用外层事务-->
+    <!--    PROPAGATION_MANDATORY：如果不存在外层事务，就抛出异常；否则使用外层事务-->
+    <!--    PROPAGATION_REQUIRES_NEW：总是主动开启事务；如果存在外层事务，就将外层事务挂起-->
+    <!--    PROPAGATION_NOT_SUPPORTED：总是不开启事务；如果存在外层事务，就将外层事务挂起-->
+    <!--    PROPAGATION_NEVER：总是不开启事务；如果存在外层事务，则抛出异常-->
+    <!--    PROPAGATION_NESTED：如果不存在外层事务，就主动创建事务；否则创建嵌套的子事务-->
 </beans>

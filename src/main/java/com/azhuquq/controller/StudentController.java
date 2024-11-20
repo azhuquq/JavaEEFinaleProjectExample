@@ -40,4 +40,12 @@ public class StudentController {
         model.addAttribute("allStu", list);
         return "stu/stuAll";
     }
+
+    @RequestMapping("/delete")
+    public String deleteStudentBySId(@RequestParam("sid")String sid) {
+        System.out.println("[Debug] the delete student sid is :" + sid);
+        studentService.deleteStudentBySid(sid);
+        // 返回页面时需要更新记录所以需要重新查询一次数据库
+        return "redirect:/stu/queryall";
+    }
 }

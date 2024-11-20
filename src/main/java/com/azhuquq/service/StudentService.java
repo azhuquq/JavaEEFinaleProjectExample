@@ -9,4 +9,6 @@ public interface StudentService {
     public Student queryStudentBySnameAndSpassword(String sname, String spassword);
 
     public List<Student> queryStudentAll();
+
+    public int deleteStudentBySid(String sid);
 }

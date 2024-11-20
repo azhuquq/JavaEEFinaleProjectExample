@@ -1,6 +1,7 @@
 package com.azhuquq.mapper;
 
 import com.azhuquq.pojo.Student;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -12,4 +13,7 @@ public interface StudentMapper {
 
     @Select("select * from school.student")
     public List<Student> queryStudentAll();
+
+    @Delete("delete from school.student where sid = #{sid}")
+    public int deleteStudentBySid(String sid);
 }

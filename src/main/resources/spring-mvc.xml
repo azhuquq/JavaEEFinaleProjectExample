@@ -29,8 +29,12 @@
     <!-- 启用注解驱动功能 -->
     <mvc:annotation-driven/>
     <!-- 拦截器的配置 -->
-    <!--    <mvc:interceptors>-->
-    <!--        &lt;!&ndash;拦截所有请求&ndash;&gt;-->
-    <!--        <bean class="com.azhuquq.interceptor.TestInterceptor"/>-->
-    <!--    </mvc:interceptors>-->
+    <!-- 配置一个关于权限的拦截器 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/stu/*"/>
+            <mvc:exclude-mapping path="/stu/login"/>
+            <bean class="com.azhuquq.interceptor.AuthorityInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
 </beans>
